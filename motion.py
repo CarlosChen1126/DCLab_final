@@ -146,6 +146,7 @@ while(cap.isOpened()):
     cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
   #print(thresh.shape)
   # 顯示偵測結果影像
+  E_t = cv2.medianBlur(np.uint8(E_t), 5)
   cv2.imshow('frame', E_t)
 
   if cv2.waitKey(1) == 27:
