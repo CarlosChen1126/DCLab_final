@@ -110,46 +110,47 @@ E_t = np.zeros(frame.shape)
 N = 6
 m = 32
 while(cap.isOpened()):
-  # 讀取一幅影格
-  ret, frame = cap.read()
-  I_t = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-  I_t = np.float32(I_t)
+    # 讀取一幅影格
+    ret, frame = cap.read()
+    I_t = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    I_t = np.float32(I_t)
 
-  # 若讀取至影片結尾，則跳出
-  if ret == False:
-    break
+    # 若讀取至影片結尾，則跳出
+    if ret == False:
+        break
 
-  # 計算目前影格與平均影像的差異值
-  diff = I_t - M_t
-  # step 1:
-  M_t += np.sign(diff)
-  #M_t[E_t == 0] += np.sign(diff)[E_t == 0]
-  # step 2:
-  O_t = np.abs(diff)
-  # step 3:
-  V_t += np.sign(N*O_t - V_t)
-  V_t = np.maximum(np.minimum(V_t, 2**m - 1), 2)
-  # step 4:
-  E_t = np.sign(O_t - V_t)
-  E_t[E_t < 0] = 0
-  E_t = E_t * 255
-  # 產生等高線
-  cntimg, cnts = cv2.findContours(np.uint8(E_t), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-  for c in cntimg:
-    # 忽略太小的區域
-    if cv2.contourArea(c) < 1500:
-      continue
-    # 計算等高線的外框範圍
-    (x, y, w, h) = cv2.boundingRect(c)
+    # 計算目前影格與平均影像的差異值
+    diff = I_t - M_t
+    # step 1:
+    M_t += np.sign(diff)
+    #M_t[E_t == 0] += np.sign(diff)[E_t == 0]
+    # step 2:
+    O_t = np.abs(diff)
+    # step 3:
+    V_t += np.sign(N*O_t - V_t)
+    V_t = np.maximum(np.minimum(V_t, 2**m - 1), 2)
+    # step 4:
+    E_t = np.sign(O_t - V_t)
+    E_t[E_t < 0] = 0
+    E_t = E_t * 255
+    # 產生等高線
+    cntimg, cnts = cv2.findContours(
+        np.uint8(E_t), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    for c in cntimg:
+        # 忽略太小的區域
+        if cv2.contourArea(c) < 1500:
+            continue
+        # 計算等高線的外框範圍
+        (x, y, w, h) = cv2.boundingRect(c)
 
-    # 畫出外框
-    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-  #print(thresh.shape)
-  # 顯示偵測結果影像
-  cv2.imshow('frame', E_t)
+        # 畫出外框
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    # print(thresh.shape)
+    # 顯示偵測結果影像
+    cv2.imshow('frame', E_t)
 
-  if cv2.waitKey(1) == 27:
-    break
+    if cv2.waitKey(1) == 27:
+        break
 
 cap.release()
 cv2.destroyAllWindows()
