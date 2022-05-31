@@ -53,6 +53,8 @@ module	VGA_Controller(	//	Host Side
 						oVGA_V_SYNC,
 						oVGA_SYNC,
 						oVGA_BLANK,
+						//  CalcDir
+						oDirection,
 
 						//	Control Signal
 						iCLK,
@@ -116,6 +118,9 @@ reg					mVGA_H_SYNC;
 reg					mVGA_V_SYNC;
 wire				mVGA_SYNC;
 wire				mVGA_BLANK;
+
+// Calc Hand
+output  [2:0]   oDirection;
 
 //	Control Signal
 input				iCLK;
@@ -235,5 +240,15 @@ begin
 		end
 	end
 end
+
+// Calculate the direction in which the most points are moving
+CalcDir    calc0(
+	.iCLK(iCLK),
+	.iRST_N(iRST_N),
+	.iH_Cont(H_Cont),
+	.iV_Cont(V_Cont),
+	.iColorVal(iGreen),
+	.oDirection(oDirection)
+);
 
 endmodule
