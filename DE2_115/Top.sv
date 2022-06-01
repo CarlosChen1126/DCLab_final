@@ -95,31 +95,100 @@ module Top (
         .sy(sy), 
         .i_start_display(monitor_start_r)
     );
-
-
+    logic [3:0] o_random_out, timeout_r, timeout_w;
+    logic [3:0] time_count_w, time_count_r;
+    logic [24:0] sec_count_w, sec_count_r;
+    lfsr lfsr0(
+        .i_clk(i_clk_25),
+        .i_rst_n(i_rst_n),
+        .o_random_out(o_random_out)
+    );
+    always_comb begin
+        case(state_r)
+            S_GAME: begin
+                
+            end
+        endcase
+    end
+    //TODO
     //Game FSM
     logic [2:0] state_r, state_w;
     localparam S_IDLE = 3'd0;
     localparam S_INST = 3'd1;
     localparam S_GAME = 3'd2;
     localparam S_MODET = 3'd3;
-    localparam S_DIE = 3'd4;
-    localparam S_WIN = 3'd5;
-    localparam S_END = 3'd6;
+    localparam S_KILL = 3'd4;
+    localparam S_DIE = 3'd5;
+    localparam S_WIN = 3'd6;
+    localparam S_END = 3'd7;
 
     always_comb begin
         case(state_r)
             S_IDLE: begin
-                
+                if(i_next) begin
+                    state_w = S_INST;
+                    timeout_w = timeout_r;
+                end
+                else begin
+                    state_w = S_IDLE;
+                    timeout_w = timeout_r;
+                end
             end
             S_INST: begin
+                if(i_next) begin
+                    state_w = S_GAME;
+                    timeout_w = o_random_out;
+                end
+                else begin
+                    state_w = S_INST;
+                    timeout_w = timeout_r;
+                end
                 
             end
             S_GAME: begin
-                
+                if(sec_count_r[25] == 1)begin
+                    state_w = S_GAME;
+                    time_count_w = time_count_r+1;
+                end
+                else begin
+                    state_w = S_GAME;
+                    time_count_w = time_count_r;
+                end
+                if(time_count_r == timeout_r) begin
+                    state_w = S_MODET;
+                    time_count_w = 0;
+                    sec_count_w = 0;
+                end
+                else begin
+                    if(i_finish_key) begin
+                        state_w = S_WIN;
+                        time_count_w = 0;
+                        sec_count_w = 0;
+                    end
+                end
             end
             S_MODET: begin
-                
+                if(i_detected) begin
+                    state_w = S_KILL;
+                end
+                else begin
+                    if(sec_count_r[25] == 1)begin
+                        state_w = S_MODET;
+                        time_count_w = time_count_r+1;
+                    end
+                    else begin
+                        state_w = S_MODET;
+                        time_count_w = time_count_r;
+                    end
+                    if(time_count_r == timeout_r) begin
+                        state_w = S_GAME;
+                        time_count_w = 0;
+                        sec_count_w = 0;
+                    end 
+                end
+            end
+            S_KILL: begin
+                //handle servo
             end
             S_DIE: begin
                 if(i_next) begin
@@ -138,9 +207,29 @@ module Top (
                 end
             end
             S_END: begin
-                
+                if(i_next) begin
+                    state_w = S_IDLE;
+                end
+                else begin
+                    state_w = S_END;
+                end
             end
         endcase
         
+    end
+    always_ff @(posedge i_clk_25 or negedge i_rst_n) begin : blockName
+        if(!i_rst_n) begin
+            state_r <= S_IDLE;
+            sec_count_r <= 0;
+        end
+        else begin
+            state_r <= state_w;
+            if(sec_count_r[25] == 1)begin
+                sec_count_r <= 0;
+            end
+            else begin
+               sec_count_r <= sec_count_w + 1; 
+            end
+        end
     end
 endmodule
