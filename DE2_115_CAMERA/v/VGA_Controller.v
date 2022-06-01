@@ -55,6 +55,7 @@ module	VGA_Controller(	//	Host Side
 						oVGA_BLANK,
 						//  CalcDir
 						oDirection,
+						oMotion,
 
 						//	Control Signal
 						iCLK,
@@ -121,6 +122,7 @@ wire				mVGA_BLANK;
 
 // Calc Hand
 output  [2:0]   oDirection;
+output  	    oMotion;
 
 //	Control Signal
 input				iCLK;
@@ -248,7 +250,8 @@ CalcDir    calc0(
 	.iH_Cont(H_Cont),
 	.iV_Cont(V_Cont),
 	.iColorVal(iGreen),
-	.oDirection(oDirection)
+	.oDirection(oDirection),
+	.oMotion(oMotion)
 );
 
 endmodule

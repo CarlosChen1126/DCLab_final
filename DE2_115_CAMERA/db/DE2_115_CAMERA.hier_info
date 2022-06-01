@@ -35,9 +35,9 @@ KEY[0] => KEY[0].IN2
 KEY[1] => KEY[1].IN1
 KEY[2] => _.IN1
 KEY[3] => comb.IN1
-EX_IO[0] <> <UNC>
-EX_IO[1] <> <UNC>
-EX_IO[2] <> <UNC>
+EX_IO[0] <> EX_IO[0]
+EX_IO[1] <> EX_IO[1]
+EX_IO[2] <> EX_IO[2]
 EX_IO[3] <> <UNC>
 EX_IO[4] <> <UNC>
 EX_IO[5] <> <UNC>
@@ -8106,7 +8106,12 @@ RESET => SD[1].ENA
 
 
 |DE2_115_CAMERA|Motion_Detection:dsp0
-iCLK => O_t_r[0].CLK
+iCLK => V_t_r[0].CLK
+iCLK => V_t_r[1].CLK
+iCLK => V_t_r[2].CLK
+iCLK => V_t_r[3].CLK
+iCLK => V_t_r[4].CLK
+iCLK => V_t_r[5].CLK
 iCLK => O_t_r[1].CLK
 iCLK => O_t_r[2].CLK
 iCLK => O_t_r[3].CLK
@@ -8147,7 +8152,12 @@ iCLK => oRed[6]~reg0.CLK
 iCLK => oRed[7]~reg0.CLK
 iCLK => oRed[8]~reg0.CLK
 iCLK => oRed[9]~reg0.CLK
-iRST_N => O_t_r[0].ACLR
+iRST_N => V_t_r[0].ACLR
+iRST_N => V_t_r[1].ACLR
+iRST_N => V_t_r[2].ACLR
+iRST_N => V_t_r[3].ACLR
+iRST_N => V_t_r[4].ACLR
+iRST_N => V_t_r[5].ACLR
 iRST_N => O_t_r[1].ACLR
 iRST_N => O_t_r[2].ACLR
 iRST_N => O_t_r[3].ACLR
@@ -8275,7 +8285,6 @@ V_t[0] => LessThan2.IN12
 V_t[0] => Add7.IN12
 V_t[0] => Selector15.IN5
 V_t[0] => Add4.IN14
-V_t[0] => Add8.IN11
 V_t[1] => Add5.IN29
 V_t[1] => LessThan1.IN11
 V_t[1] => Add6.IN11
@@ -8283,7 +8292,6 @@ V_t[1] => LessThan2.IN11
 V_t[1] => Add7.IN11
 V_t[1] => Selector14.IN5
 V_t[1] => Add4.IN13
-V_t[1] => Add8.IN10
 V_t[2] => Add5.IN28
 V_t[2] => LessThan1.IN10
 V_t[2] => Add6.IN10
@@ -8291,7 +8299,6 @@ V_t[2] => LessThan2.IN10
 V_t[2] => Add7.IN10
 V_t[2] => Selector13.IN5
 V_t[2] => Add4.IN12
-V_t[2] => Add8.IN9
 V_t[3] => Add5.IN27
 V_t[3] => LessThan1.IN9
 V_t[3] => Add6.IN9
@@ -8299,7 +8306,6 @@ V_t[3] => LessThan2.IN9
 V_t[3] => Add7.IN9
 V_t[3] => Selector12.IN5
 V_t[3] => Add4.IN11
-V_t[3] => Add8.IN8
 V_t[4] => Add5.IN26
 V_t[4] => LessThan1.IN8
 V_t[4] => Add6.IN8
@@ -8307,7 +8313,6 @@ V_t[4] => LessThan2.IN8
 V_t[4] => Add7.IN8
 V_t[4] => Selector11.IN5
 V_t[4] => Add4.IN10
-V_t[4] => Add8.IN7
 V_t[5] => Add5.IN25
 V_t[5] => LessThan1.IN7
 V_t[5] => Add6.IN7
@@ -8315,7 +8320,6 @@ V_t[5] => LessThan2.IN7
 V_t[5] => Add7.IN7
 V_t[5] => Selector10.IN5
 V_t[5] => Add4.IN9
-V_t[5] => Add8.IN6
 M_t_o[0] <= Selector9.DB_MAX_OUTPUT_PORT_TYPE
 M_t_o[1] <= Selector8.DB_MAX_OUTPUT_PORT_TYPE
 M_t_o[2] <= Selector7.DB_MAX_OUTPUT_PORT_TYPE
@@ -8437,12 +8441,14 @@ oVGA_BLANK <= oVGA_BLANK~reg0.DB_MAX_OUTPUT_PORT_TYPE
 oDirection[0] <= CalcDir:calc0.oDirection
 oDirection[1] <= CalcDir:calc0.oDirection
 oDirection[2] <= CalcDir:calc0.oDirection
+oMotion <= CalcDir:calc0.oMotion
 iCLK => iCLK.IN1
 iRST_N => iRST_N.IN1
 iZOOM_MODE_SW => ~NO_FANOUT~
 
 
 |DE2_115_CAMERA|VGA_Controller:u1|CalcDir:calc0
+iCLK => oMotion~reg0.CLK
 iCLK => oDirection[0]~reg0.CLK
 iCLK => oDirection[1]~reg0.CLK
 iCLK => oDirection[2]~reg0.CLK
@@ -8698,6 +8704,7 @@ iRST_N => motion_count[0][14].ACLR
 iRST_N => motion_count[0][15].ACLR
 iRST_N => motion_count[0][16].ACLR
 iRST_N => motion_count[0][17].ACLR
+iRST_N => oMotion~reg0.ACLR
 iRST_N => oDirection[0]~reg0.PRESET
 iRST_N => oDirection[1]~reg0.PRESET
 iRST_N => oDirection[2]~reg0.PRESET
@@ -8841,5 +8848,6 @@ iColorVal[9] => LessThan17.IN11
 oDirection[0] <= oDirection[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 oDirection[1] <= oDirection[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 oDirection[2] <= oDirection[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+oMotion <= oMotion~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 

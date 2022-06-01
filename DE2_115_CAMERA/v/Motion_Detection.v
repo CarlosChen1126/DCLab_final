@@ -109,7 +109,7 @@ always @(*) begin
 end
 // step 4:
 //assign E_t = (O_t[10:2] > 0) ? 10'd100 : 0;
-assign diff_E = O_t_r - ({V_t,4'd5});
+assign diff_E = O_t_r - ({V_t_r,4'd10});
 always @(*) begin
     if (diff_E[10]) begin
         E_t = 0;
@@ -132,8 +132,8 @@ always @(posedge iCLK or negedge iRST_N) begin
         oRed    <= E_t;
         oGreen  <= E_t;
         oBlue   <= E_t;
-        O_t_r   <= O_t;
-        V_t_r   <= V_t;
+        O_t_r   <= O_t + {5'b10000};
+        V_t_r   <= (V_t < 63) ? (V_t + 1) : 63; //If you change it to V_t, there will be a bug. what the fuck???
     end
 end
 
