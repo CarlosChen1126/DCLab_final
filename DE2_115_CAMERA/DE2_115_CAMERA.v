@@ -490,6 +490,10 @@ assign  VGA_B = oVGA_B[9:2];
 
 // Calc Hand
 wire   [2:0]  oDirection;
+wire   		  oMotion;
+
+//assign EX_IO[0] = oMotion;
+assign EX_IO[2:0] = oDirection;
 
 //D5M read 
 always@(posedge D5M_PIXLCLK)
@@ -561,7 +565,7 @@ SEG7_LUT_8 			u5	(	.oSEG0(HEX0),.oSEG1(HEX1),
 							.oSEG2(HEX2),.oSEG3(HEX3),
 							.oSEG4(HEX4),.oSEG5(HEX5),
 							.oSEG6(HEX6),.oSEG7(HEX7),
-							.iDIG(oDirection)//Frame_Cont[31:0]
+							.iDIG({oMotion,1'b0,oDirection})//Frame_Cont[31:0]
 						);
 
 sdram_pll 			u6	(
@@ -688,6 +692,7 @@ VGA_Controller		u1	(	//	Host Side
 							.oVGA_BLANK(VGA_BLANK_N),
 							// Calc Hand
 							.oDirection(oDirection),
+							.oMotion(oMotion),
 							//	Control Signal
 							.iCLK(VGA_CTRL_CLK),
 							.iRST_N(DLY_RST_2),

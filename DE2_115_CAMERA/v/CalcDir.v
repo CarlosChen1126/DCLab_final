@@ -4,7 +4,8 @@ module CalcDir(
     input       [12:0]  iH_Cont,
     input       [12:0]  iV_Cont,
     input       [9:0]   iColorVal,
-    output  reg [2:0]   oDirection
+    output  reg [2:0]   oDirection,
+    output  reg         oMotion
 );
 
 `ifdef VGA_640x480p60
@@ -47,6 +48,7 @@ reg  [17:0] motion_count [0:7];
 
 reg  [17:0] MostPixel;
 reg  [2:0]  MostDirection;
+reg  [2:0]  oDirection_w;
 
 integer i;
 
@@ -200,18 +202,23 @@ always @(*) begin
         MostDirection = 7;
     end
 end
+always @(*) begin
+    if ((iV_Cont == Y_START+V_SYNC_ACT - 1) && (iH_Cont == X_START + H_SYNC_ACT - 1)) begin
+        oDirection_w  = MostDirection;
+    end
+    else begin
+        oDirection_w  = oDirection;
+    end
+end
 
 always @(posedge iCLK or negedge iRST_N) begin
     if (!iRST_N) begin
         oDirection  <= 7;
+        oMotion     <= 0;
     end
     else begin
-        if ((iV_Cont == Y_START+V_SYNC_ACT - 1) && (iH_Cont == X_START + H_SYNC_ACT - 1)) begin
-            oDirection  <= MostDirection;
-        end
-        else begin
-            oDirection  <= oDirection;
-        end
+        oDirection  <= oDirection_w;
+        oMotion     <= (oDirection_w != 7);
     end
 end
 
