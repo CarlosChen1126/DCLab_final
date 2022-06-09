@@ -50,7 +50,7 @@ module Motion_Detection(
     input      [9:0]  M_t,
     input      [5:0]  V_t,
     output     [9:0]  M_t_o, // update M_t
-    output     [9:0]  V_t_o, // update V_t
+    output     [5:0]  V_t_o, // update V_t
     output reg [9:0]  oRed,
     output reg [9:0]  oGreen,
     output reg [9:0]  oBlue
@@ -115,7 +115,7 @@ always @(*) begin
         E_t = 0;
     end
     else begin
-        E_t = 255;
+        E_t = {1'b0,8'd255,2'b0};
     end
 end
 
@@ -132,8 +132,8 @@ always @(posedge iCLK or negedge iRST_N) begin
         oRed    <= E_t;
         oGreen  <= E_t;
         oBlue   <= E_t;
-        O_t_r   <= O_t + {5'b10000};
-        V_t_r   <= (V_t < 63) ? (V_t + 1) : 63; //If you change it to V_t, there will be a bug. what the fuck???
+        O_t_r   <= O_t;//O_t + {5'b10000};
+        V_t_r   <= V_t;//(V_t < 63) ? (V_t + 1) : 63; //If you change it to V_t, there will be a bug. what the fuck???
     end
 end
 

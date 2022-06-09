@@ -492,8 +492,8 @@ assign  VGA_B = oVGA_B[9:2];
 wire   [2:0]  oDirection;
 wire   		  oMotion;
 
-//assign EX_IO[0] = oMotion;
-assign EX_IO[2:0] = oDirection;
+assign EX_IO[0] = oMotion;
+assign EX_IO[3:1] = oDirection;
 
 //D5M read 
 always@(posedge D5M_PIXLCLK)

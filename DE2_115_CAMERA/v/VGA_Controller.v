@@ -124,6 +124,9 @@ wire				mVGA_BLANK;
 output  [2:0]   oDirection;
 output  	    oMotion;
 
+// Purify
+wire        [9:0]   oPurify;
+
 //	Control Signal
 input				iCLK;
 input				iRST_N;
@@ -144,13 +147,13 @@ assign	mVGA_SYNC	=	1'b0;
 
 assign	mVGA_R	=	(	H_Cont>=X_START 	&& H_Cont<X_START+H_SYNC_ACT &&
 						V_Cont>=Y_START+v_mask 	&& V_Cont<Y_START+V_SYNC_ACT )
-						?	iRed	:	0;
+						?	oPurify	:	0;
 assign	mVGA_G	=	(	H_Cont>=X_START 	&& H_Cont<X_START+H_SYNC_ACT &&
 						V_Cont>=Y_START+v_mask 	&& V_Cont<Y_START+V_SYNC_ACT )
-						?	iGreen	:	0;
+						?	oPurify	:	0;
 assign	mVGA_B	=	(	H_Cont>=X_START 	&& H_Cont<X_START+H_SYNC_ACT &&
 						V_Cont>=Y_START+v_mask 	&& V_Cont<Y_START+V_SYNC_ACT )
-						?	iBlue	:	0;
+						?	oPurify	:	0;
 
 always@(posedge iCLK or negedge iRST_N)
 	begin
@@ -252,6 +255,14 @@ CalcDir    calc0(
 	.iColorVal(iGreen),
 	.oDirection(oDirection),
 	.oMotion(oMotion)
+);
+// remove noise
+Purify     purify0(
+	.iCLK(iCLK),
+	.iRST_N(iRST_N),
+	.idata(iGreen),
+	.iDVAL(oRequest),
+	.odata(oPurify)
 );
 
 endmodule
