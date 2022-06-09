@@ -47,14 +47,20 @@ parameter S_RECD_PAUSE = 3;
 parameter S_PLAY       = 4;
 parameter S_PLAY_PAUSE = 5;
 // sound index map to start and finish addr
+
+//// MUSIC
+// GAME
 parameter START_ADDR_0    = 20'b0;
-parameter FINISH_ADDR_0   = {5'd5,15'd0};
-parameter START_ADDR_1    = {5'd5,15'd0};
-parameter FINISH_ADDR_1   = {5'd10,15'd0};
-parameter START_ADDR_2    = {5'd10,15'd0};
-parameter FINISH_ADDR_2   = {5'd15,15'd0};
-parameter START_ADDR_3    = {5'd15,15'd0};
-parameter FINISH_ADDR_3   = {5'd20,15'd0};
+parameter FINISH_ADDR_0   = {20'h24FD7};
+// KILL
+parameter START_ADDR_1    = {20'h24FD8};
+parameter FINISH_ADDR_1   = {20'h599CF};
+// WIN
+parameter START_ADDR_2    = {20'h599D0};
+parameter FINISH_ADDR_2   = {20'h7E056};
+// DIE
+parameter START_ADDR_3    = {20'h7E057};
+parameter FINISH_ADDR_3   = {20'h97D8F};
 
 logic [19:0] start_addr;
 logic [19:0] finish_addr;

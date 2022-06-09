@@ -261,8 +261,7 @@ item #(
 	 localparam S_KILL = 3'd5;
     localparam S_WIN = 3'd6;
 
-    always_comb begin
-        state_w = state_r;    
+    always_comb begin    
         sec_count_w = sec_count_r;
         deadline_w = deadline_r;
 		  r_w = r_r;
@@ -286,7 +285,7 @@ item #(
 					 b_w = (ten_drawing_r && de) ? {ten_colr[3:0],4'b0} : (one_drawing_r && de) ? {one_colr[3:0],4'b0} : (squid_drawing_r && de) ? {squid_colr[3:0], 4'b0} : (rule_drawing_r && de) ? {rule_colr[3:0], 4'b0} : 8'b0;
                 state_w = (deadline_r == 0) ? S_GAME : S_INST;
                 sec_count_w = sec_count_r > 0 ? sec_count_r - 1 : 25'b1011111010111100001000000; //clk_25M
-                deadline_w = (deadline_r == 0) ? 7'd60 : (sec_count_r == 0) ? deadline_r - 1 : deadline_r;
+                deadline_w = (deadline_r == 0) ? 7'd30 : (sec_count_r == 0) ? deadline_r - 1 : deadline_r;
 					 count_w = (deadline_r == 0) ? 8'd255 : 8'd0;				 
             end
             S_GAME: begin
@@ -309,7 +308,7 @@ item #(
 								count_w = 8'd255;
                     end
                     else begin
-                        state_w = state_r;
+                        state_w = S_GAME;
                     end
                 end
             end
@@ -342,15 +341,16 @@ item #(
 					 count_w = count_r > 0 ? count_r - 1 : 0;
                 if(i_next) begin
                     state_w = S_INST;
+						  sec_count_w = 25'b1011111010111100001000000;
                 end
                 else begin
                     state_w = S_DIE;
                 end
             end
 				S_KILL: begin
-					 r_w = (ten_drawing_r && de) ? {ten_colr[11:8],4'b0} : ((one_drawing_r && de) ? {one_colr[11:8],4'b0} : (~(game2_drawing_r && de) ? 8'b0 : (game2_pix < 4'd3 || game2_pix > 4'd8) ? {game2_colr[11:8], 4'b0} : 8'hD0));
-                g_w = (ten_drawing_r && de) ? {ten_colr[7:4],4'b0} : ((one_drawing_r && de) ? {one_colr[7:4],4'b0} : (~(game2_drawing_r && de) ?  8'b0 : (game2_pix < 4'd3 || game2_pix > 4'd8) ? {game2_colr[7:4], 4'b0} : 8'b0));
-                b_w = (ten_drawing_r && de) ? {ten_colr[3:0],4'b0} : ((one_drawing_r && de) ? {one_colr[3:0],4'b0} : (~(game2_drawing_r && de) ?  8'b0 : (game2_pix < 4'd3 || game2_pix > 4'd8) ? {game2_colr[3:0], 4'b0} : 8'b0));
+					 r_w = (ten_drawing_r && de) ? {ten_colr[11:8],4'b0} : ((one_drawing_r && de) ? {one_colr[11:8],4'b0} : (~(game2_drawing_r && de) ? 8'b0 : (game2_pix == 4'd0 || game2_pix > 4'd8 || game2_pix==4'd2) ? {game2_colr[11:8], 4'b0} : 8'hD0));
+                g_w = (ten_drawing_r && de) ? {ten_colr[7:4],4'b0} : ((one_drawing_r && de) ? {one_colr[7:4],4'b0} : (~(game2_drawing_r && de) ?  8'b0 : (game2_pix == 4'd0 || game2_pix > 4'd8 || game2_pix==4'd2) ? {game2_colr[7:4], 4'b0} : 8'b0));
+                b_w = (ten_drawing_r && de) ? {ten_colr[3:0],4'b0} : ((one_drawing_r && de) ? {one_colr[3:0],4'b0} : (~(game2_drawing_r && de) ?  8'b0 : (game2_pix == 4'd0 || game2_pix > 4'd8 || game2_pix==4'd2) ? {game2_colr[3:0], 4'b0} : 8'b0));
                 state_w = i_music_stop ? S_DIE : S_KILL ;
                 sec_count_w = sec_count_r;
                 deadline_w = deadline_r;
@@ -366,6 +366,7 @@ item #(
 					 count_w = count_r > 0 ? count_r - 1 : 0;
                 if(i_next) begin
                     state_w = S_INST;
+						  sec_count_w = 25'b1011111010111100001000000;
                 end
                 else begin
                     state_w = S_WIN;

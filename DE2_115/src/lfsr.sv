@@ -2,7 +2,7 @@ module Lfsr (
 	input        i_clk,
 	input        i_rst_n,
 	input  [2:0] state,
-	output [1:0] o_random_out
+	output       o_random_out
 );
 
 // ===== States =====
@@ -13,7 +13,7 @@ parameter seed   = 16'b1111011100110011;
 // ===== Registers & Wires =====
 logic [15:0] lfsr_w, lfsr_r;
 // ===== Output Assignments =====
-assign o_random_out = (state == 3'd2) ? ((lfsr_r[1:0]==2'd3) ? 2'd0 : lfsr_r[1:0]) : 2'd0;
+assign o_random_out = (state == 3'd2) ? lfsr_r[0] : 0;
 // ===== Combinational Circuits =====
 always_comb begin
     if (state == 3'd2) begin

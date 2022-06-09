@@ -217,7 +217,7 @@ AudTop AudTop0(
 	.state(aud_state),
 	
 	// AudDSP and SRAM
-	.i_speed({1'b0, o_random_out}), // design how user can decide mode on your own
+	.i_speed({2'b0, o_random_out}), // design how user can decide mode on your own
 	.i_fast(1),
 	.i_slow_0(0),
 	.i_slow_1(0),
