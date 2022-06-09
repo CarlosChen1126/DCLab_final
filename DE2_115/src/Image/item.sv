@@ -30,7 +30,7 @@ module item #(
         .WIDTH(COLR_BITS), 
         .DEPTH(DEPTH), 
         .INIT_F(FILE)
-    ) title_rom (
+    ) sync0 (
         .clk(i_clk_25), 
         .addr(rom_addr), 
         .data(rom_data)
@@ -40,7 +40,7 @@ module item #(
 		.DEPTH(16), 
 		.INIT_F(PALETTE_FILE), 
         .ADDRW(4)
-    ) title_clut(
+    ) async0(
         .addr(pix), 
         .data(colr)
     );

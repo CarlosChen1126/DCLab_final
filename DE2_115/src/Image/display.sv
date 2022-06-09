@@ -1,4 +1,4 @@
-module display_1 (
+module display (
     input clk_25M, 
     input rst_n, 
     output VGA_BLANK_N, 
@@ -14,7 +14,7 @@ module display_1 (
 
     localparam H_FRONT  =   16;
     localparam H_SYNC   =   96;
-    localparam H_BACK   =   48;
+    localparam H_BACK   =   80;
     localparam H_ACT    =   640;
     localparam signed H_START = 0 - H_FRONT - H_SYNC - H_BACK; // horizontal start
     localparam signed HS_START = H_START + H_FRONT; // sync start
@@ -92,10 +92,10 @@ module display_1 (
             state_r <= S_IDLE;
             sx_r <= H_START;
             sy_r <= V_START; 
-		    hs_r <= 1'b1;
+				hs_r <= 1'b1;
             vs_r <= 1'b1;
-			line_r  <= 1'b0;
-			de_r    <= 1'b0;
+				line_r  <= 1'b0;
+				de_r    <= 1'b0;
         end
         else begin
             state_r <= state_w;

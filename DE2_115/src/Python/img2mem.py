@@ -51,7 +51,7 @@ print(height)
 (width, height) = (int(sys.argv[5]), int(sys.argv[6]))
 
 source_img = source_img_original.resize((width, height))
-
+print(source_img)
 
 pixels = source_img.load()
 prev_img = source_img.copy()  # take a copy for later preview process

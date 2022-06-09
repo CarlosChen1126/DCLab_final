@@ -1,7 +1,8 @@
 module Lfsr (
 	input        i_clk,
 	input        i_rst_n,
-	output [3:0] o_random_out
+	input  [2:0] state,
+	output [1:0] o_random_out
 );
 
 // ===== States =====
@@ -12,14 +13,19 @@ parameter seed   = 16'b1111011100110011;
 // ===== Registers & Wires =====
 logic [15:0] lfsr_w, lfsr_r;
 // ===== Output Assignments =====
-assign o_random_out = (lfsr_r[3:0]>0)? lfsr_r[3:0] :seed[3:0];
+assign o_random_out = (state == 3'd2) ? ((lfsr_r[1:0]==2'd3) ? 2'd0 : lfsr_r[1:0]) : 2'd0;
 // ===== Combinational Circuits =====
 always_comb begin
-    lfsr_w	= {lfsr_r[8] ^ (lfsr_r[6] ^ (lfsr_r[5] ^ lfsr_r[3])), 
+    if (state == 3'd2) begin
+		lfsr_w = lfsr_r;
+	 end
+    else begin
+		lfsr_w	= {lfsr_r[8] ^ (lfsr_r[6] ^ (lfsr_r[5] ^ lfsr_r[3])), 
                 lfsr_r[7] ^ (lfsr_r[5] ^ (lfsr_r[4] ^ lfsr_r[2])), 
                 lfsr_r[6] ^ (lfsr_r[4] ^ (lfsr_r[3] ^ lfsr_r[1])), 
                 lfsr_r[5] ^ (lfsr_r[3] ^ (lfsr_r[2] ^ lfsr_r[0])), 
                 lfsr_r[15:4]}; 
+	 end
 end
 
 // ===== Sequential Circuits =====
