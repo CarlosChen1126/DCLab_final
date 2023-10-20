@@ -139,6 +139,7 @@ Therefore, after recording the start/finish addresses for each audio segment, To
     
 ***5. Random Speed:***
 To enhance the game's excitement, we employed a Linear Feedback Shift Register (LFSR) as a random number generator (as shown in the diagram below). Each time the wooden figure turns around, a random speed is generated and sent to AudDSP, providing different music speeds. This creates a randomized adjustment in the player's movement time, enhancing the game's difficulty and fun.
+
 ![圖片 14](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/2021eee0-8010-4bf3-bfdb-e82aceb5da72)
 
 ***6. Laser Module:***
