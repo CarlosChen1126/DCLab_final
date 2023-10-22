@@ -65,10 +65,10 @@ DE2_115 (Game Control)
 ## Block Diagram
 
 - motion detection
-![圖片 5](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/014aed68-acb6-4c5b-9829-08f7aad3d1bb)
+![圖片 5](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/15eea640-5c56-4c7f-8250-d2eba85f9b7a)
 
 - game
-![圖片 6](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/9bdacfc1-4379-4872-ae68-ef7fb0e98454)
+![圖片 6](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/dd0b883a-e657-45bd-8ded-3855c343daea)
 
 
 ## FSM
@@ -76,13 +76,12 @@ DE2_115 (Game Control)
 ### Fitter Summary
 
 - Motion Detection
-
-![圖片 7](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/f4334868-c477-46ac-80c7-00956d25dd52)
+![圖片 7](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/c4470b8b-ced4-429a-93ea-fc8b29422549)
 
 - Game
 
-![圖片 8](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/11f43ecd-e749-4b64-a27a-7080b1b9ef1f)
-![圖片 9png](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/2a0717f1-aec9-43e0-b632-908234f47916)
+![圖片 8](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/c8d7e0b6-f6ef-4c1b-83d7-851a1d1cae58)
+![圖片 9png](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/9027d943-78ea-4620-b1d1-61d1908a0133)
 
 
 
@@ -107,23 +106,25 @@ Microphone、Speaker、Screen、VGA cable、Power cord。
 
 **1. Motion Detection:**
 The reason we chose the algorithm shown in the following image for our motion detection is due to considerations for processing speed and the complexity of implementation on FPGA.This algorithm reads the image It from the camera, then calculates the difference with the estimated background Mt. If the absolute value of this difference is less than the variance Vt, the pixel is considered not in motion. Conversely, if the absolute difference is greater than Vt, the pixel is classified as in motion.he values of Mt and Vt are updated based on the magnitude of the difference. After performing the motion detection computation, we also implemented a noise removal step. For each pixel, if all surrounding pixels are classified as not in motion, then this pixel is also considered not in motion. This process reduces noise in the image, enhancing the precision of the motion detection.
-![圖片 10](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/71dbfa68-ef59-4b63-8afa-8c61656dce84)
+![圖片 10](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/54f7e942-f60f-4930-ad5c-668ee7ebcd31)
 
 
 
 **2. Index Calculation:**
 To recognize the left-right movement of objects, we divided the screen into seven equal segments proportionally. We calculated the number of motion-detected pixels in each segment. The segment with the highest number of pixels was selected. If the pixel count in that segment exceeded a predefined threshold, the corresponding movement signal was sent to the game control FPGA board. The screen segments from right to left correspond to 0 to 6.
-![圖片 11](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/ca0c18ba-c53c-4ed3-b0e1-e2394ec55c29)
+![圖片 11](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/c292de63-6c9b-4d11-b74f-8867af6400d1)
+
 
 **3. Image_Display:**
   In the image display section, we referred to(https://projectf.io/posts/hardware-sprites/) using
     img2mem.py to save each images as separate pixel and palette files. The palette represents the colors used in the image, while the pixel file indicates the index of each pixel corresponding to a specific color in the palette.We stored game images using a palette of 16 colors, with each color represented by 4 bits for each RGB channel, as shown in the diagram below.
     
 Palette:
-![圖片 12](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/b913c9f3-49e6-44a1-a8a3-fb208de1f7d8)
+![圖片 12](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/6bfb8021-b6cf-4430-9cd9-482c18e11343)
 
 Pixel:
-![圖片 13](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/d2be6b70-f21d-481b-931c-3e6190f3a7ee)
+![圖片 13](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/77f2923a-eb1d-485f-941d-7706944e4e1c)
+
 
 A pixel value of 1 (indicated by the red box) represents that the color of this pixel corresponds to the first color in the palette file, which is ACC (as indicated by the red box). 
 And a pixel value of 5 (indicated by the green box) represents the fifth color in the palette file, which is 9 BD (as indicated by the green box). 
@@ -140,7 +141,8 @@ Therefore, after recording the start/finish addresses for each audio segment, To
 ***5. Random Speed:***
 To enhance the game's excitement, we employed a Linear Feedback Shift Register (LFSR) as a random number generator (as shown in the diagram below). Each time the wooden figure turns around, a random speed is generated and sent to AudDSP, providing different music speeds. This creates a randomized adjustment in the player's movement time, enhancing the game's difficulty and fun.
 
-![圖片 14](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/2021eee0-8010-4bf3-bfdb-e82aceb5da72)
+![圖片 14](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/a8a7d508-e40c-4824-96e5-dc342ac5b3f6)
+
 
 ***6. Laser Module:***
 >To better recreate the scenes from the storyline, we incorporated laser gun elements into the game.
@@ -148,7 +150,8 @@ To enhance the game's excitement, we employed a Linear Feedback Shift Register (
 We utilized the Arduino Nano development board, SG-90 servo motor, and laser module to control the direction and signals of the laser gun.
 The Top module of the game controller first receives signals from the D5M camera, indicating the presence of moving objects and their location within specific segments. If the game is in the wooden figure detection state, Top communicates these signals to Arduino via GPIO.
 After receiving the firing signal, Arduino translates the segment signal into an angle signal, controlling the servo motor to rotate to a specific angle before emitting the laser light. Adding the laser feature not only enhances the interactivity beyond just the screen and camera but also increases the game's playability. The presence of the figurine on the laser module adds a unique highlight to the overall gaming experience!"
-![圖片 15](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/ff4da9fd-dad0-421a-b946-e96b551983a7)
+![圖片 15](https://github.com/CarlosChen1126/DCLab_final/assets/60618505/26ac9ef7-c8af-49f3-91a6-f9d4041c8bfc)
+
 
 
 
